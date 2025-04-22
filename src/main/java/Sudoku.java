@@ -1,9 +1,11 @@
+package src.main.java;
+
 import java.util.*;
 
 public class Sudoku {
     int SIZE;
-    int board[][];
-    int SUBGRID_SIZE[][];
+    int[][] board;
+    int[][] SUBGRID_SIZE;
 
     /**
      * Our sudoku board constructor.
@@ -21,7 +23,7 @@ public class Sudoku {
      * @return A now-filled Sudoku board
      */
     public Sudoku loadBoard(Sudoku newBoard) {
-
+        return new Sudoku();
     }
 
     /**
@@ -38,7 +40,7 @@ public class Sudoku {
      * @return true if solution is safe and legal
      */
     public boolean solveSudoku() {
-
+        return false;
     }
 
     /**
@@ -47,7 +49,7 @@ public class Sudoku {
      * @return true if number is not present in the same row, column, or subgrid
      */
     public boolean isSafe(int number) {
-
+        return false;
     }
 
     /**
