@@ -1,11 +1,14 @@
 package src.main.java;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
 public class Sudoku {
     int SIZE;
     int[][] board;
-    int[][] SUBGRID_SIZE;
+    int SUBGRID_SIZE;
+    private String filename = "sudoku.txt";
 
     /**
      * Our sudoku board constructor.
@@ -13,17 +16,32 @@ public class Sudoku {
      */
     public Sudoku() {
         this.SIZE = 9;
+        this.SUBGRID_SIZE = 3;
         this.board = new int[SIZE][SIZE];
-        this.SUBGRID_SIZE = new int[SIZE/3][SIZE/3];
     }
 
     /**
      * This method loads the txt file "sudoku.txt" into a given Sudoku board.
-     * @param newBoard The unfilled Sudoku board
-     * @return A now-filled Sudoku board
+     * @return A Sudoku board filled with the values from sudoku.txt
      */
-    public Sudoku loadBoard(Sudoku newBoard) {
-        return new Sudoku();
+    public Sudoku loadBoard(Sudoku board) {
+        // check for valid input
+        if (board == null) return null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            // read each line
+            for (int i = 0; i < SIZE; i++) {
+                String line = reader.readLine();
+                String[] cells = line.split(" ");
+                // split each line into cells, assign to board
+                for (int j = 0; j < SIZE; j++) {
+                    board.board[i][j] = Integer.parseInt(cells[j]);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            board = null;
+        }
+        return board;
     }
 
     /**
@@ -48,15 +66,44 @@ public class Sudoku {
      * rules of Sudoku.
      * @return true if number is not present in the same row, column, or subgrid
      */
-    public boolean isSafe(int number) {
-        return false;
+    public boolean isSafe(int number, int row, int column)
+    {
+        // check for duplicate of number in row
+        for (int i = 0; i < SIZE; i++) {
+            if (board[row][i] == number) return false;
+        }
+        // check for duplicate of number in column
+        for (int i = 0; i < SIZE; i++) {
+            if (board[i][column] == number) return false;
+        }
+        // check for duplicate of number in subgrid
+        int subgridRow = row / SUBGRID_SIZE;
+        int subgridColumn = column / SUBGRID_SIZE;
+        for (int i = 0; i < SUBGRID_SIZE; i++) {
+            for (int j = 0; j < SUBGRID_SIZE; j++) {
+                if (board[subgridRow + i][subgridColumn + j] == number) return false;
+            }
+        }
+        return true;
     }
 
     /**
      * This method prints the given Sudoku board in a readable format.
      */
     public void printBoard() {
-
+        for (int i = 0; i < SIZE; i++) {
+            if (i % SUBGRID_SIZE == 0 && i != 0) {
+                System.out.println("------+-------+------");
+            }
+            for (int j = 0; j < SIZE; j++) {
+                if (j % SUBGRID_SIZE == 0 && j != 0) {
+                    System.out.print("| ");
+                }
+                int val = board[i][j];
+                System.out.print((val == 0 ? "." : val) + " ");
+            }
+            System.out.println();
+        }
     }
 
 }
