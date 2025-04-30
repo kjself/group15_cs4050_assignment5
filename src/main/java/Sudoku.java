@@ -2,7 +2,6 @@ package src.main.java;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
 
 public class Sudoku {
     int SIZE;
@@ -45,10 +44,15 @@ public class Sudoku {
     }
 
     /**
-     * This method initiates the solving process, and prints the board if a solution is found.
+     * This method initiates the solving process.
+     * It prints the board if a solution is found.
+     * @author Evan Trejo
      */
     public void solve() {
-
+        if(solveSudoku()) printBoard();
+        else{
+            System.out.println("No solution exixts.");
+        }
     }
 
     /**
@@ -56,9 +60,26 @@ public class Sudoku {
      * and tries to place numbers (from 1 to 9) in the empty cells. If placing a number leads
      * to a solution, it returns true; otherwise, it backtracks.
      * @return true if solution is safe and legal
+     * @author Evan Trejo
      */
     public boolean solveSudoku() {
-        return false;
+        for (int row = 0; row < SIZE; row++){
+            for (int col = 0; col < SIZE; col++){
+                if (board[row][col] == 0){
+                    for (int num = 1; num <= 9; num++){
+                        if (isSafe(num,row,col)){
+
+                            //update number
+                            board[row][col] = num;
+                            if (solveSudoku()) return true;
+                            board[row][col] = 0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -76,9 +97,11 @@ public class Sudoku {
         for (int i = 0; i < SIZE; i++) {
             if (board[i][column] == number) return false;
         }
+
         // check for duplicate of number in subgrid
-        int subgridRow = row / SUBGRID_SIZE;
-        int subgridColumn = column / SUBGRID_SIZE;
+        // subgridRow & subgridColumn logic changed - Evan Trejo
+        int subgridRow = row - row % SUBGRID_SIZE;
+        int subgridColumn = column - column % SUBGRID_SIZE;
         for (int i = 0; i < SUBGRID_SIZE; i++) {
             for (int j = 0; j < SUBGRID_SIZE; j++) {
                 if (board[subgridRow + i][subgridColumn + j] == number) return false;
