@@ -75,10 +75,14 @@ public class Sudoku {
                             board[row][col] = 0;
                         }
                     }
+                    System.out.println("Board Updated:");
+                    printBoard();
+                    System.out.println("\n");
                     return false;
                 }
             }
         }
+        System.out.println("Board Complete!");
         return true;
     }
 
